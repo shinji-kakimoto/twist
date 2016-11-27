@@ -2,6 +2,7 @@ module Accounts
   class BaseController < ApplicationController
     before_action :authenticate_user!
 
+    # 認証はUserで行って、subdomainに対応するAccountを取得する
     def current_account
       @current_account ||= Account.find_by!(subdomain: request.subdomain)
     end
@@ -9,6 +10,7 @@ module Accounts
 
     def owner?
       # Accountモデルから取得したレコードの外部キーがUserと一致しているか。
+      # なので、ownerIDがないと、一致しているかチェックできない。
       current_account.owner == current_user
     end
     helper_method :owner?
