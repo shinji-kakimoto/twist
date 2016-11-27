@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 describe "notes" do
-  let(:author) { create_author! }
+  let(:account) { FactoryGirl.create(:account) }
   let(:book) { create_book! }
   before do
-    login_as(author)
+    login_as(account.owner)
+    set_subdomain(account.subdomain)
   end
-    
+
+  # HACK: テスト毎にjs: trueが設定できるんだ！！！！
   it "can add a new note to a paragraph", :js => true do
     visit book_chapter_path(book, book.chapters.first)
     element = book.chapters.first.elements.first
@@ -15,13 +17,14 @@ describe "notes" do
       click_link "0 notes +"
     end
 
+    # HACK: ここでも、DBの変化ではなく、jsによる画面上の変化を書いているな。なるほど
     comment_box = find(".note_comments_text textarea")
     comment_box.set("This is a **test** note!")
     click_button "Leave Note"
     expect(page).to have_content("1 note +")
     click_link "All notes for this chapter"
     click_link "This is a test note!"
-    expect(page).to have_content("#{author.email} commented less than a minute ago")
+    expect(page).to have_content("#{account.owner.email} commented less than a minute ago")
     # Ensure note text shows up correctly in processed markdown.
 
     within ".comment" do
@@ -32,25 +35,25 @@ describe "notes" do
 
     # And the rest of it.
     expect(page).to have_content("This is a test note!")
-    
+
   end
-  
+
   it "can view all notes for a book" do
     chapter = book.chapters.first
     element = chapter.elements.first
     note = element.notes.create!(
-      user: author, 
+      user: account.owner, 
       number: 1
     )
     note.comments.create!(
-      user: author,
+      user: account.owner,
       text: "This is a test note!"
     )
     
     visit book_path(book)
     click_link "All notes for this book"
     click_link "This is a test note!"
-    expect(page).to have_content("#{author.email} commented less than a minute ago")
+    expect(page).to have_content("#{account.owner.email} commented less than a minute ago")
     expect(page).to have_content("This is a test note!")
   end
 
@@ -59,12 +62,12 @@ describe "notes" do
       chapter = book.chapters.first
       element = chapter.elements.first
       @note = element.notes.create!(
-        user: author, 
+        user: account.owner, 
         number: 1
       )
       @note.comments.create!(
         text: "This is a test note!",
-        user: author
+        user: account.owner
       )
       
       visit book_path(book)
@@ -90,12 +93,12 @@ describe "notes" do
     chapter = book.chapters.first
     element = chapter.elements.first
     note = element.notes.create!(
-      user: author, 
+      user: account.owner, 
       number: 1,
       state: "rejected"
     )
     note.comments.create!(
-      user: author,
+      user: account.owner,
       text: "This is a test note!"
     )
     
