@@ -20,11 +20,11 @@ module Accounts
 
     # リンク先でここにくる
     def accept
-      @invitation = Invitation.find(params[:id])
+      @invitation = Invitation.find_by(token: params[:id])
     end
 
     def accepted
-      @invitation = Invitation.find(params[:id])
+      @invitation = Invitation.find_by(token: params[:id])
       user_params = params[:user].permit(
         :email,
         :password,
