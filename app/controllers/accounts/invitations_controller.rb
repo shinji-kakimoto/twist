@@ -13,6 +13,7 @@ module Accounts
     def create
       @invitation = current_account.invitations.new(invitation_params)
       @invitation.save
+      # TODO: developmentでは送れない。
       InvitationMailer.invite(@invitation).deliver_later
       flash[:notice] = "#{@invitation.email} has been invited."
       redirect_to root_url
@@ -20,20 +21,26 @@ module Accounts
 
     # リンク先でここにくる
     def accept
+      store_location_for(:user, request.fullpath)
       @invitation = Invitation.find_by(token: params[:id])
     end
 
     def accepted
       @invitation = Invitation.find_by(token: params[:id])
-      user_params = params[:user].permit(
-        :email,
-        :password,
-        :password_confirmation
-      )
 
-      user = User.create!(user_params)
+      if user_signed_in?
+        user = current_user
+      else
+        user_params = params[:user].permit(
+          :email,
+          :password,
+          :password_confirmation
+        )
+
+        user = User.create!(user_params)
+        sign_in(user)
+      end
       current_account.users << user
-      sign_in(user)
       flash[:notice] = "You have joined the #{current_account.name} account."
       redirect_to root_url(subdomain: current_account.subdomain)
     end
