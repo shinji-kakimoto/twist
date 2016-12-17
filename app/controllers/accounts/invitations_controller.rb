@@ -3,6 +3,7 @@ module Accounts
   class InvitationsController < Accounts::BaseController
     # ユーザのログイン
     skip_before_action :authenticate_user!, only: [:accept, :accepted]
+    skip_before_action :authorize_user!, only: [:accept, :accepted]
     # 自前のower権限チェック
     before_action :authorize_owner!, except: [:accept, :accepted]
 

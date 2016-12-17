@@ -2,6 +2,7 @@ module Accounts
   class BooksController < Accounts::BaseController
     # TODO verify_authenticity_tokenの意味
     skip_before_action :authenticate_user!, only: [:receive]
+    skip_before_action :authorize_user!, only: [:receive]
     skip_before_filter :verify_authenticity_token, only: :receive
 
     def index

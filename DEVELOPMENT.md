@@ -34,3 +34,8 @@ http://test.lvh.me:3000
 accountとuserの関連が上手くわからんな。
 localhostだと上手く動かん。。。
 
+#画面解説
+メールによるユーザ追加制御
+http://test.lvh.me:3000/invitations/c4cd76cdcae56c74c16961d5674f0840/accept
+http://test.lvh.me:3000/invitations/:token/accept
+

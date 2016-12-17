@@ -1,6 +1,12 @@
 module Accounts
   class BaseController < ApplicationController
+    # d. authenticate: prove or show to be true or genuine
+    # ユーザIDとパスワードで「認証」する
     before_action :authenticate_user!
+    # d. authorize: give official permission for or approval to
+    # ある情報へのアクセスを「認可」する
+    before_action :authorize_user!
+
 
     # 認証はUserで行って、subdomainに対応するAccountを取得する
     def current_account
@@ -14,5 +20,26 @@ module Accounts
       current_account.owner == current_user
     end
     helper_method :owner?
+
+    private
+
+    # subdomainに対するユーザ認可
+    def authorize_user!
+      authenticate_user!
+      unless current_account.owner == current_user ||
+             current_account.users.exists?(current_user.id)
+      flash[:notice] = "You are not permitted to view that account."
+      redirect_to root_url(subdomain: nil)
+      end
+    end
+    #def authorize_user!
+    #  authenticate_user!
+    #  unless current_account.owner == current_user || current_account.users.exists?(current_user.id)
+    #    flash[:notice] = "You are not pemitted to view that account."
+    #    redirect_to root_url(subdomain: nil)
+    #  end
+    #end
   end
 end
+
+
