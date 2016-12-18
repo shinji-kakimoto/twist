@@ -8,6 +8,7 @@ class Account < ActiveRecord::Base
   # HACK: え、usersあったぞ。。。
   has_many :memberships
   has_many :users, through: :memberships
+  has_many :books
   #TODO 子から親を作るってこと？
   accepts_nested_attributes_for :owner
 end

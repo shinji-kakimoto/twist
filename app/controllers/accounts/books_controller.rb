@@ -6,7 +6,7 @@ module Accounts
     skip_before_filter :verify_authenticity_token, only: :receive
 
     def index
-      @books = Book.where(hidden: false)
+      @books = current_account.books
     end
 
     def new
