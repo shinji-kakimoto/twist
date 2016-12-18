@@ -8,6 +8,7 @@ feature "Inviting users" do
     visit root_url
   end
   scenario "invites a user successfully" do
+    click_link "Users"
     click_link "Invite User"
     fill_in "Email", with: "test@example.com"
     click_button "Invite User"

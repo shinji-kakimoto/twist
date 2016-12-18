@@ -32,13 +32,14 @@ module Accounts
       redirect_to root_url(subdomain: nil)
       end
     end
-    #def authorize_user!
-    #  authenticate_user!
-    #  unless current_account.owner == current_user || current_account.users.exists?(current_user.id)
-    #    flash[:notice] = "You are not pemitted to view that account."
-    #    redirect_to root_url(subdomain: nil)
-    #  end
-    #end
+
+    # TODO: 自前で色々権限設定をやっている感じなのかな？Punditで代替可能？
+    def authorize_owner!
+      unless owner?
+        flash[:alert] = "Only an owner of an account can do that."
+        redirect_to root_url(subdomain: current_account.subdomain)
+      end
+    end
   end
 end
 
