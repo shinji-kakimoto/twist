@@ -25,6 +25,10 @@ PG: could not connect to server: No such file or directory
 ## 初期データの投入
 bundle exec rake db:setup
 
+## pslqへの接続
+init db時に作成されている
+psql -d postgres
+
 ## Rspecの動作
 brew install phantomjs
 

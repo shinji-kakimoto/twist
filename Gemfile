@@ -13,6 +13,7 @@ gem 'paperclip'
 gem 'pygments.rb'
 
 gem 'redis-activesupport'
+gem 'apartment'
 
 group :development, :test do
   gem 'pry-rails'
