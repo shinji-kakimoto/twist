@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218094025) do
+ActiveRecord::Schema.define(version: 20170313024911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,10 +38,7 @@ ActiveRecord::Schema.define(version: 20161218094025) do
     t.boolean  "hidden",         default: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.integer  "account_id"
   end
-
-  add_index "books", ["account_id"], name: "index_books_on_account_id", using: :btree
 
   create_table "chapters", force: :cascade do |t|
     t.integer  "book_id"
@@ -97,13 +94,11 @@ ActiveRecord::Schema.define(version: 20161218094025) do
 
   create_table "invitations", force: :cascade do |t|
     t.string   "email"
-    t.integer  "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "token"
   end
 
-  add_index "invitations", ["account_id"], name: "index_invitations_on_account_id", using: :btree
   add_index "invitations", ["token"], name: "index_invitations_on_token", using: :btree
 
   create_table "memberships", force: :cascade do |t|
@@ -147,8 +142,6 @@ ActiveRecord::Schema.define(version: 20161218094025) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  add_foreign_key "books", "accounts"
-  add_foreign_key "invitations", "accounts"
   add_foreign_key "memberships", "accounts"
   add_foreign_key "memberships", "users"
 end

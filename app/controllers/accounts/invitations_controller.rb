@@ -12,10 +12,10 @@ module Accounts
     end
 
     def create
-      @invitation = current_account.invitations.new(invitation_params)
+      @invitation = Invitation.new(invitation_params)
       @invitation.save
       # TODO: developmentでは送れない。
-      InvitationMailer.invite(@invitation).deliver_later
+      InvitationMailer.invite(@invitation, current_account).deliver_later
       flash[:notice] = "#{@invitation.email} has been invited."
       redirect_to root_url
     end

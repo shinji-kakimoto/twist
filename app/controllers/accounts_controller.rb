@@ -7,6 +7,7 @@ class AccountsController < ApplicationController
   def create
     @account = Account.create(account_params)
     if @account.save
+      @account.create_schema
       # HACK: ユーザクラスでログインしている。
       sign_in(@account.owner)
       flash[:notice] = "Your account has been created."

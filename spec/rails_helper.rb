@@ -38,8 +38,23 @@ RSpec.configure do |config|
   config.around(:each) do |example|
     DatabaseCleaner.cleaning do
       example.run
+      # Apartment: publicスキーマのみのreset
+      Apartment::Tenant.reset
+    end
+    # Apartment: その他のスキーマのリセット
+    connection = ActiveRecord::Base.connection.raw_connection
+    schemas = connection.query(%Q{
+      SELECT 'drop schema "' || nspname || '" cascade;'
+      from pg_namespace
+      where nspname != 'public'
+      and nspname NOT LIKE 'pg_%'
+      and nspname != 'information_schema';
+    })
+    schemas.each do |query|
+      connection.query(query.values.first)
     end
   end
+
 
   config.filter_gems_from_backtrace(
     "actionpack",
