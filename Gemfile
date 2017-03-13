@@ -11,6 +11,7 @@ gem 'redcarpet'
 gem 'nokogiri'
 gem 'paperclip'
 gem 'pygments.rb'
+gem 'braintree'
 
 gem 'redis-activesupport'
 
